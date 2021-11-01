@@ -2,8 +2,8 @@
   "name": "node-jotter",
   "version": "1.0.1",
   "description": "A Node.js Logging library",
-  "main": "lib/index.js",
-  "types": "lib",
+  "main": "lib/main.js",
+  "types": "lib/main.d.ts",
   "scripts": {
     "build": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,5 +20,8 @@
   "homepage": "https://github.com/saarang1995/node-jotter#readme",
   "devDependencies": {
     "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "winston": "^3.3.3"
   }
 }

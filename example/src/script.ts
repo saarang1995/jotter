@@ -1,3 +1,4 @@
-import { printMessage } from 'node-jotter';
+import { NodeJotter } from 'node-jotter';
 
-printMessage('gello');
+const Print = new NodeJotter.Print();
+Print.log('hello');
