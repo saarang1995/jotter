@@ -1,0 +1,18 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/script.js",
+  "scripts": {
+    "compile": "tsc -w",
+    "start": "node dist/script.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "node-jotter": "^1.0.1"
+  }
+}
