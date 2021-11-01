@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/saarang1995/node-jotter/issues"
   },
-  "homepage": "https://github.com/saarang1995/node-jotter#readme"
+  "homepage": "https://github.com/saarang1995/node-jotter#readme",
+  "devDependencies": {
+    "typescript": "^4.4.4"
+  }
 }
