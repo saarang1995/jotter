@@ -1,5 +1,5 @@
 function printMessage(message) {
-  console.log('Jotter', message);
+  console.log('Node Jotter', message);
 }
 
-module.exports = printMessage;
+module.exports = { printMessage };

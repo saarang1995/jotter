@@ -1,5 +1,5 @@
 {
-  "name": "jotter",
+  "name": "node-jotter",
   "version": "1.0.0",
   "description": "A Node.js Logging library",
   "main": "index.js",
@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/saarang1995/jotter.git"
+    "url": "git+https://github.com/saarang1995/node-jotter.git"
   },
   "author": "Saarang Tiwari",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/saarang1995/jotter/issues"
+    "url": "https://github.com/saarang1995/node-jotter/issues"
   },
-  "homepage": "https://github.com/saarang1995/jotter#readme"
+  "homepage": "https://github.com/saarang1995/node-jotter#readme"
 }
