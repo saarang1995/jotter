@@ -1,5 +1,6 @@
-import { Format } from 'logform';
-import winston, { Logger } from 'winston';
+import winston, { Logger, format } from 'winston';
+const { combine, timestamp, label, printf, prettyPrint } = format;
+
 // import { Environment } from '../enums/environment.enum';
 // import { NodeJotterConfiguration } from '../interfaces/node_jotter_config.interface';
 
@@ -14,6 +15,12 @@ export interface NodeJotterConfiguration {
   serviceName: string;
 }
 
+/**
+ * todo
+ * refer stackoverflow link for example configuration for winston
+ * https://stackoverflow.com/questions/56090851/winston-logging-object
+ *
+ */
 export class NodeJotter {
   private loggingAgent: Logger;
 
@@ -24,24 +31,39 @@ export class NodeJotter {
       defaultMeta: {
         serviceName,
       },
-      // format: new Format({}),
+      // format: this.getFormat(serviceName),
       transports: [new winston.transports.File({ filename })],
     });
 
     if (environment != Environment.PRODUCTION) {
       this.loggingAgent.add(
         new winston.transports.Console({
-          format: winston.format.simple(),
+          format: this.getFormat(serviceName),
         })
       );
     }
   }
 
+  private getFormat(labelText: string) {
+    console.log(labelText);
+    const myFormat = printf(({ level, message, label, timestamp }) => {
+      console.log(`${timestamp} [${label}] ${level}: ${message}`);
+      return `${timestamp} [${labelText}] ${level}: ${message}`;
+    });
+    const combinedFormat = combine(
+      // label({ label: labelText, message: true }),
+      timestamp(),
+      // prettyPrint(),
+      myFormat
+    );
+
+    return combinedFormat;
+  }
   /**
    * Application level logs of INFO level
    */
-  info() {
-    console.log('hello');
+  info(message: string) {
+    this.loggingAgent.info(message);
   }
 
   /**

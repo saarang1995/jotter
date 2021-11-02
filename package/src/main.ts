@@ -1,3 +1,3 @@
-import NodeJotter from './services/node_jotter';
+import { NodeJotter } from './services/node_jotter';
 
 export default { NodeJotter: NodeJotter };
