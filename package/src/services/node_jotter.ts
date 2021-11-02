@@ -1,10 +1,21 @@
 import { Format } from 'logform';
 import winston, { Logger } from 'winston';
-import { Environment } from '../enums/environment.enum';
-import { NodeJotterConfiguration } from '../interfaces/node_jotter_config.interface';
+// import { Environment } from '../enums/environment.enum';
+// import { NodeJotterConfiguration } from '../interfaces/node_jotter_config.interface';
 
-export default class NodeJotter {
-  loggingAgent: Logger;
+export enum Environment {
+  'PRODUCTION',
+  'DEVELOPMENT',
+}
+
+export interface NodeJotterConfiguration {
+  filename: string;
+  environment: Environment;
+  serviceName: string;
+}
+
+export class NodeJotter {
+  private loggingAgent: Logger;
 
   constructor(configuration: NodeJotterConfiguration) {
     const { filename, environment, serviceName } = configuration;
@@ -13,7 +24,7 @@ export default class NodeJotter {
       defaultMeta: {
         serviceName,
       },
-      format: new Format({}),
+      // format: new Format({}),
       transports: [new winston.transports.File({ filename })],
     });
 
@@ -29,7 +40,9 @@ export default class NodeJotter {
   /**
    * Application level logs of INFO level
    */
-  info() {}
+  info() {
+    console.log('hello');
+  }
 
   /**
    * Logs of DEBUG Level
