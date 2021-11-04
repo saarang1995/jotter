@@ -1,5 +1,5 @@
 import winston, { Logger, format } from 'winston';
-const { combine, timestamp, label, printf, prettyPrint } = format;
+const { combine, timestamp, label, printf, prettyPrint, json, errors } = format;
 
 // import { Environment } from '../enums/environment.enum';
 // import { NodeJotterConfiguration } from '../interfaces/node_jotter_config.interface';
@@ -31,30 +31,24 @@ export class NodeJotter {
       defaultMeta: {
         serviceName,
       },
-      // format: this.getFormat(serviceName),
-      transports: [new winston.transports.File({ filename })],
-    });
+      format: this.getFormat(), // this.getFormat(serviceName),
 
-    if (environment != Environment.PRODUCTION) {
-      this.loggingAgent.add(
-        new winston.transports.Console({
-          format: this.getFormat(serviceName),
-        })
-      );
-    }
+      transports: [
+        new winston.transports.File({ filename }), // Enable logging in a file
+        new winston.transports.Console({}),
+      ],
+    });
   }
 
-  private getFormat(labelText: string) {
-    console.log(labelText);
-    const myFormat = printf(({ level, message, label, timestamp }) => {
-      console.log(`${timestamp} [${label}] ${level}: ${message}`);
-      return `${timestamp} [${labelText}] ${level}: ${message}`;
-    });
+  private getFormat(): winston.Logform.Format {
+    // const myFormat = printf(({ level, message, label, timestamp }) => {
+    //   return `${timestamp} [${serviceName}] ${level}: ${message}`;
+    // });
     const combinedFormat = combine(
-      // label({ label: labelText, message: true }),
-      timestamp(),
-      // prettyPrint(),
-      myFormat
+      timestamp(), // timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+      errors({ stack: true }),
+      json()
+      // myFormat
     );
 
     return combinedFormat;
@@ -62,23 +56,47 @@ export class NodeJotter {
   /**
    * Application level logs of INFO level
    */
-  info(message: string) {
-    this.loggingAgent.info(message);
+  info(message: string, ...meta: any[]): void {
+    this.loggingAgent.info(message, meta);
   }
 
   /**
    * Logs of DEBUG Level
    * Should be used in development
    */
-  debug() {}
+  debug(message: string, ...meta: any[]): void {
+    this.loggingAgent.info(message, meta);
+  }
 
   /**
    * Server error logs which can cause crashing
    */
-  fatal() {}
+  fatal(message: string, error: Error, ...meta: any[]): void {
+    this.loggingAgent.error(message, error, meta, {
+      isFatal: true,
+    });
+  }
 
   /**
    * Application error logs
    */
-  error() {}
+  error(message: string, error: Error, ...meta: any[]): void {
+    this.loggingAgent.error(message, error, meta);
+  }
 }
+
+const nodeJotter = new NodeJotter({
+  filename: 'local.log',
+  environment: Environment.DEVELOPMENT,
+  serviceName: 'UNIT_TEST',
+});
+
+// nodeJotter.info(
+//   'hi There!',
+//   { name: 'test', env: 'production' },
+//   { test: 'true' }
+// );
+
+nodeJotter.error('test Error', new Error(), {
+  source: 'userService',
+});
