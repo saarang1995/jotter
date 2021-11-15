@@ -1,38 +1,19 @@
 import winston, { Logger, format } from 'winston';
-const { combine, timestamp, label, printf, prettyPrint, json, errors } = format;
+import { LoggerConfiguration } from '../main';
+const { combine, timestamp, json, errors } = format;
 
-// import { Environment } from '../enums/environment.enum';
-// import { NodeJotterConfiguration } from '../interfaces/node_jotter_config.interface';
-
-export enum Environment {
-  'PRODUCTION',
-  'DEVELOPMENT',
-}
-
-export interface NodeJotterConfiguration {
-  filename: string;
-  environment: Environment;
-  serviceName: string;
-}
-
-/**
- * todo
- * refer stackoverflow link for example configuration for winston
- * https://stackoverflow.com/questions/56090851/winston-logging-object
- *
- */
 export class NodeJotter {
   private loggingAgent: Logger;
 
-  constructor(configuration: NodeJotterConfiguration) {
-    const { filename, environment, serviceName } = configuration;
+  constructor(configuration: LoggerConfiguration) {
+    const { filename, serviceName, level } = configuration;
 
     this.loggingAgent = winston.createLogger({
       defaultMeta: {
         serviceName,
       },
-      format: this.getFormat(), // this.getFormat(serviceName),
-
+      format: this.getFormat(),
+      level,
       transports: [
         new winston.transports.File({ filename }), // Enable logging in a file
         new winston.transports.Console({}),
@@ -47,7 +28,10 @@ export class NodeJotter {
     const combinedFormat = combine(
       timestamp(), // timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
       errors({ stack: true }),
-      json()
+      json(),
+      format.metadata({
+        fillExcept: ['message', 'level', 'timestamp', 'label'],
+      })
       // myFormat
     );
 
@@ -65,7 +49,7 @@ export class NodeJotter {
    * Should be used in development
    */
   debug(message: string, ...meta: any[]): void {
-    this.loggingAgent.info(message, meta);
+    this.loggingAgent.debug(message, meta);
   }
 
   /**
@@ -81,22 +65,21 @@ export class NodeJotter {
    * Application error logs
    */
   error(message: string, error: Error, ...meta: any[]): void {
-    this.loggingAgent.error(message, error, meta);
+    this.loggingAgent.error(message, meta, error);
   }
 }
 
-const nodeJotter = new NodeJotter({
+/**
+ *  TODO:
+ * Read this to solve logger.error not printing issue
+ * https://github.com/winstonjs/winston/issues/1338
+ *  */
+
+new NodeJotter({
   filename: 'local.log',
-  environment: Environment.DEVELOPMENT,
-  serviceName: 'UNIT_TEST',
-});
-
-// nodeJotter.info(
-//   'hi There!',
-//   { name: 'test', env: 'production' },
-//   { test: 'true' }
-// );
-
-nodeJotter.error('test Error', new Error(), {
-  source: 'userService',
+  serviceName: 'example',
+  level: 'debug',
+}).error('Low User balance', new Error('Balance calculator crashed'), {
+  source: 'Balance table',
+  userName: 'ElA',
 });

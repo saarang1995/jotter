@@ -1,10 +1,11 @@
-import { NodeJotter, Environment } from '../services/node_jotter';
+import { NodeJotter } from '../services/node_jotter';
 import { expect } from 'chai';
 
 const nodeJotter = new NodeJotter({
   filename: 'local.log',
-  environment: Environment.DEVELOPMENT,
+  // environment: Environment.DEVELOPMENT,
   serviceName: 'UNIT_TEST',
+  level: 'info',
 });
 
 describe('node_jotter', () => {

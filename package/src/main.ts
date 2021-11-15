@@ -1,3 +1,10 @@
 import { NodeJotter } from './services/node_jotter';
 
-export default { NodeJotter: NodeJotter };
+export const Logger = NodeJotter;
+
+export interface LoggerConfiguration {
+  filename: string;
+  // environment: Environment;
+  serviceName: string;
+  level: 'error' | 'debug' | 'info';
+}
