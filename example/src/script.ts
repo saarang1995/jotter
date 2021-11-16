@@ -1,7 +1,9 @@
 import { Logger, LoggerConfiguration } from 'node-jotter';
+import { Environment } from 'node-jotter/lib/enums/environment.enum';
 
 const loggerConfiguration: LoggerConfiguration = {
   filename: 'local.log',
+  environment: Environment.development,
   serviceName: 'example',
   level: 'debug',
 };

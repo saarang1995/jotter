@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var node_jotter_1 = require("node-jotter");
+var environment_enum_1 = require("node-jotter/lib/enums/environment.enum");
 var loggerConfiguration = {
     filename: 'local.log',
+    environment: environment_enum_1.Environment.development,
     serviceName: 'example',
     level: 'debug',
 };
