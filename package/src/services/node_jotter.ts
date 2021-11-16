@@ -1,4 +1,5 @@
-import winston, { Logger, format } from 'winston';
+import winston, { Logger, format, level } from 'winston';
+import { Environment } from '../enums/environment.enum';
 import { LoggerConfiguration } from '../main';
 const { combine, timestamp, json, errors } = format;
 
@@ -6,11 +7,12 @@ export class NodeJotter {
   private loggingAgent: Logger;
 
   constructor(configuration: LoggerConfiguration) {
-    const { filename, serviceName, level } = configuration;
+    const { filename, serviceName, level, environment } = configuration;
 
     this.loggingAgent = winston.createLogger({
       defaultMeta: {
         serviceName,
+        environment,
       },
       format: this.getFormat(),
       level,
@@ -56,16 +58,21 @@ export class NodeJotter {
    * Server error logs which can cause crashing
    */
   fatal(message: string, error: Error, ...meta: any[]): void {
-    this.loggingAgent.error(message, error, meta, {
-      isFatal: true,
-    });
+    meta.push(this.getCustomErrorObject(error));
+    meta.push({ isFatal: true });
+    this.loggingAgent.error(message, meta);
   }
 
   /**
    * Application error logs
    */
   error(message: string, error: Error, ...meta: any[]): void {
-    this.loggingAgent.error(message, meta, error);
+    meta.push(this.getCustomErrorObject(error));
+    this.loggingAgent.error(message, meta);
+  }
+
+  private getCustomErrorObject(error: Error): Object {
+    return { error: { message: error.message, stack: error.stack } };
   }
 }
 
@@ -79,7 +86,8 @@ new NodeJotter({
   filename: 'local.log',
   serviceName: 'example',
   level: 'debug',
-}).error('Low User balance', new Error('Balance calculator crashed'), {
+  environment: Environment.development,
+}).fatal('Low User balance', new Error('Balance calculator crashed'), {
   source: 'Balance table',
   userName: 'ElA',
 });
