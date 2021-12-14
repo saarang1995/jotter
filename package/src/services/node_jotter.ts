@@ -1,6 +1,6 @@
 import winston, { format, Logger } from 'winston';
-import { Environment } from '../enums/environment.enum';
 import { LoggerConfiguration } from '../main';
+
 const { combine, timestamp, json, errors } = format;
 
 export class NodeJotter {
@@ -8,7 +8,11 @@ export class NodeJotter {
 
   constructor(configuration: LoggerConfiguration) {
     const { filename, serviceName, level, environment } = configuration;
-
+    const transports = [];
+    transports.push(new winston.transports.Console({}));
+    if (filename) {
+      transports.push(new winston.transports.File({ filename }));
+    }
     this.loggingAgent = winston.createLogger({
       defaultMeta: {
         serviceName,
@@ -16,10 +20,7 @@ export class NodeJotter {
       },
       format: this.getFormat(),
       level,
-      transports: [
-        new winston.transports.File({ filename }), // Enable logging in a file
-        new winston.transports.Console({})
-      ]
+      transports
     });
   }
 
@@ -82,13 +83,3 @@ export class NodeJotter {
  * Read this to solve logger.error not printing issue
  * https://github.com/winstonjs/winston/issues/1338
  *  */
-
-new NodeJotter({
-  filename: 'local.log',
-  serviceName: 'example',
-  level: 'debug',
-  environment: Environment.development
-}).error('Low User balance', new Error('Balance calculator crashed'), {
-  source: 'Balance table',
-  userName: 'ElA'
-});
