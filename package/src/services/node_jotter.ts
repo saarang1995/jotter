@@ -83,8 +83,9 @@ export class NodeJotter {
   }
 }
 
-/**
+/*
  *  TODO:
  * Read this to solve logger.error not printing issue
  * https://github.com/winstonjs/winston/issues/1338
- *  */
+ *
+ * */
