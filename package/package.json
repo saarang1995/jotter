@@ -1,6 +1,6 @@
 {
   "name": "node-jotter",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A Node.js Logging library",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",

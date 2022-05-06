@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/script.js",
   "scripts": {
-    "compile": "tsc -w",
+    "compile": "node_modules/.bin/tsc -w",
     "start": "node dist/script.js"
   },
   "author": "",
@@ -13,6 +13,6 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "node-jotter": "^1.0.1"
+    "node-jotter": "1.0.6"
   }
 }
