@@ -12,6 +12,7 @@
     "compile": "node_modules/.bin/tsc -w",
     "start": "nodemon main.ts",
     "test": "node_modules/mocha/bin/mocha -r ts-node/register './src/tests/**/*.spec.ts'",
+    "lint": "tslint -p tsconfig.json",
     "prepare": "yarn build",
     "prepublishOnly": "yarn test && yarn lint",
     "preversion": "yarn lint",
