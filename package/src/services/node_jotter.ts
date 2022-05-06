@@ -1,5 +1,5 @@
-import winston, { format, Logger } from 'winston';
-import { LoggerConfiguration } from '../main';
+import winston, { format, Logger } from "winston";
+import { LoggerConfiguration } from "../main";
 
 const { combine, timestamp, json, errors } = format;
 
@@ -16,11 +16,11 @@ export class NodeJotter {
     this.loggingAgent = winston.createLogger({
       defaultMeta: {
         serviceName,
-        environment
+        environment,
       },
       format: this.getFormat(),
       level,
-      transports
+      transports,
     });
   }
 
@@ -33,7 +33,7 @@ export class NodeJotter {
       errors({ stack: true }),
       json(),
       format.metadata({
-        fillExcept: ['message', 'level', 'timestamp', 'label']
+        fillExcept: ["message", "level", "timestamp", "label"],
       })
       // myFormat
     );
@@ -73,13 +73,19 @@ export class NodeJotter {
     this.loggingAgent.error(message, meta);
   }
 
-  private getCustomErrorObject(error: Error): Object {
+  /**
+   *
+   * @param {Error} error Error Object
+   * @returns Formatted error object
+   */
+  private getCustomErrorObject(error: Error): {} {
     return { error: { message: error.message, stack: error.stack } };
   }
 }
 
-/**
+/*
  *  TODO:
  * Read this to solve logger.error not printing issue
  * https://github.com/winstonjs/winston/issues/1338
- *  */
+ *
+ * */
